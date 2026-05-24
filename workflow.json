@@ -1,0 +1,374 @@
+{
+  "name": "KOL Store - TikTok Affiliate Auto Sync",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 5
+            }
+          ]
+        }
+      },
+      "id": "1d8bf62d-a2f0-466d-9654-e0b2a7bb1111",
+      "name": "Check Every 5 Mins",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        200,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__vl": {
+            "type": "string",
+            "value": ""
+          }
+        },
+        "sheetName": "Products",
+        "options": {}
+      },
+      "id": "2d8bf62d-a2f0-466d-9654-e0b2a7bb2222",
+      "name": "Read Google Sheets",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [
+        400,
+        300
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "google-sheets-creds-id",
+          "name": "Google Sheets Connection"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.Status }}",
+              "value2": "PENDING"
+            }
+          ]
+        }
+      },
+      "id": "3d8bf62d-a2f0-466d-9654-e0b2a7bb3333",
+      "name": "Has Pending Row?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [
+        600,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "/**\n * n8n Code Node Script: Shopee Deep Link Generator\n */\nasync function resolveShortLink(url) {\n    if (!url) return '';\n    if (url.includes('shope.ee') || url.includes('shp.ee') || url.includes('shorturl')) {\n        try {\n            const response = await fetch(url, {\n                method: 'GET',\n                headers: {\n                    'User-Agent': 'Mozilla/5.0 (Windows)'\n                },\n                redirect: 'follow'\n            });\n            return response.url;\n        } catch (error) {\n            return url;\n        }\n    }\n    return url;\n}\n\nfunction generateShopeeDeepLink(url) {\n    if (!url) return '';\n    try {\n        let shopId = '';\n        let productId = '';\n        const regexPattern1 = /-i\\.(\\d+)\\.(\\d+)/;\n        const match1 = url.match(regexPattern1);\n        if (match1) {\n            shopId = match1[1];\n            productId = match1[2];\n        } else {\n            const regexPattern2 = /\\/product\\/(\\d+)\\/(\\d+)/;\n            const match2 = url.match(regexPattern2);\n            if (match2) {\n                shopId = match2[1];\n                productId = match2[2];\n            }\n        }\n        if (shopId && productId) {\n            return `shopeevn://product/${shopId}/${productId}`;\n        }\n        if (url.includes('shopee.vn')) {\n            return `shopeevn://`;\n        }\n        return url;\n    } catch (e) {\n        return url;\n    }\n}\n\nconst items = $input.all();\nconst results = [];\nfor (const item of items) {\n    const data = { ...item.json };\n    if (data.Status === 'PENDING' && data.Original_Link) {\n        const resolvedUrl = await resolveShortLink(data.Original_Link);\n        data.Deep_Link = generateShopeeDeepLink(resolvedUrl);\n    }\n    results.push({ json: data });\n}\nreturn results;"
+      },
+      "id": "4d8bf62d-a2f0-466d-9654-e0b2a7bb4444",
+      "name": "Shopee Deep Link Generator",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        820,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "/**\n * n8n Code Node Script: Image Path & Compression URL Generator\n */\nconst items = $input.all();\nconst results = [];\nfor (const item of items) {\n    const data = { ...item.json };\n    if (data.Status === 'PENDING' && data.Image_URL) {\n        if (data.Image_URL.startsWith('images/product_') && data.Image_URL.endsWith('.webp')) {\n            results.push({ json: data });\n            continue;\n        }\n        const rawImageUrl = data.Image_URL.trim();\n        const productId = data.ID || Math.floor(Math.random() * 1000000);\n        const localFileName = `images/product_${productId}.webp`;\n        const compressUrl = `https://images.weserv.nl/?url=${encodeURIComponent(rawImageUrl)}&output=webp&q=75&w=400`;\n        data.Temp_Compress_URL = compressUrl;\n        data.Temp_Local_Path = localFileName;\n        data.Image_URL = localFileName;\n    }\n    results.push({ json: data });\n}\nreturn results;"
+      },
+      "id": "5d8bf62d-a2f0-466d-9654-e0b2a7bb5555",
+      "name": "Image Info Generator",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1020,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.Temp_Compress_URL }}",
+        "responseFormat": "file",
+        "options": {}
+      },
+      "id": "6d8bf62d-a2f0-466d-9654-e0b2a7bb6666",
+      "name": "Download Compressed Image",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        1220,
+        200
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "resource": "file",
+        "operation": "createOrUpdate",
+        "owner": "YOUR_GITHUB_USERNAME",
+        "repository": "YOUR_GITHUB_REPO_NAME",
+        "filePath": "={{ $json.Temp_Local_Path }}",
+        "binaryData": true,
+        "binaryPropertyName": "data",
+        "commitMessage": "=Auto compressed product image: {{ $json.ID }} WebP"
+      },
+      "id": "7d8bf62d-a2f0-466d-9654-e0b2a7bb7777",
+      "name": "Push Image to GitHub",
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1,
+      "position": [
+        1420,
+        200
+      ],
+      "credentials": {
+        "githubOAuth2Api": {
+          "id": "github-creds-id",
+          "name": "GitHub Connection"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__vl": {
+            "type": "string",
+            "value": ""
+          }
+        },
+        "sheetName": "Products",
+        "updateKey": "ID",
+        "fields": {
+          "values": [
+            {
+              "name": "Deep_Link",
+              "value": "={{ $json.Deep_Link }}"
+            },
+            {
+              "name": "Image_URL",
+              "value": "={{ $json.Image_URL }}"
+            },
+            {
+              "name": "Status",
+              "value": "DONE"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "8d8bf62d-a2f0-466d-9654-e0b2a7bb8888",
+      "name": "Update Sheets to DONE",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [
+        1620,
+        200
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "google-sheets-creds-id",
+          "name": "Google Sheets Connection"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__vl": {
+            "type": "string",
+            "value": ""
+          }
+        },
+        "sheetName": "Products",
+        "options": {}
+      },
+      "id": "9d8bf62d-a2f0-466d-9654-e0b2a7bb9999",
+      "name": "Fetch All Rows (For Cache)",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [
+        1820,
+        250
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "google-sheets-creds-id",
+          "name": "Google Sheets Connection"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "/**\n * n8n Code Node Script: Cache Builder (data.json Generator)\n */\nconst DEFAULT_KOL_CONFIG = {\n    avatar: \"https://api.dicebear.com/7.x/adventurer/svg?seed=Lisa\",\n    name: \"@khanhvy.official\",\n    bio: \"✨ Welcome to my shop! Góc chia sẻ các sản phẩm chính hãng mình đã trực tiếp trải nghiệm và review trên TikTok. Săn deal hời mỗi ngày cùng mình nhé! 👇\",\n    shopee_mall: \"https://shopee.vn/m/shopeemall\"\n};\n\nconst items = $input.all();\nconst products = [];\nlet kolConfig = { ...DEFAULT_KOL_CONFIG };\n\nfor (const item of items) {\n    const data = item.json;\n    if (data.Category === 'CONFIG' || data.ID === -1 || data.Title === 'KOL_CONFIG') {\n        kolConfig.name = data.Original_Link || kolConfig.name;\n        kolConfig.bio = data.Deep_Link || kolConfig.bio;\n        kolConfig.avatar = data.Image_URL || kolConfig.avatar;\n        kolConfig.shopee_mall = data.Original_Link || kolConfig.shopee_mall;\n        continue;\n    }\n    if (data.Status === 'DONE') {\n        products.push({\n            ID: Number(data.ID) || Math.floor(Math.random() * 1000000),\n            Category: data.Category ? data.Category.trim() : 'Sản phẩm khác',\n            Title: data.Title ? data.Title.trim() : 'Sản phẩm Shopee',\n            Original_Link: data.Original_Link ? data.Original_Link.trim() : '',\n            Deep_Link: data.Deep_Link ? data.Deep_Link.trim() : '',\n            Image_URL: data.Image_URL ? data.Image_URL.trim() : '',\n            Status: 'DONE'\n        });\n    }\n}\nproducts.sort((a, b) => b.ID - a.ID);\nconst finalData = {\n    config: kolConfig,\n    products: products\n};\n\nreturn [{\n    json: {\n        file_name: \"data.json\",\n        file_content: JSON.stringify(finalData, null, 2),\n        total_products: products.length,\n        generated_at: new Date().toISOString()\n    }\n}];"
+      },
+      "id": "ad8bf62d-a2f0-466d-9654-e0b2a7bbaaaa",
+      "name": "Cache Builder",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        2020,
+        250
+      ]
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "resource": "file",
+        "operation": "createOrUpdate",
+        "owner": "YOUR_GITHUB_USERNAME",
+        "repository": "YOUR_GITHUB_REPO_NAME",
+        "filePath": "data.json",
+        "fileContent": "={{ $json.file_content }}",
+        "commitMessage": "=Auto updated data.json cache (Total: {{ $json.total_products }} products)"
+      },
+      "id": "bd8bf62d-a2f0-466d-9654-e0b2a7bbbbbb",
+      "name": "Push data.json to GitHub",
+      "type": "n8n-nodes-base.github",
+      "typeVersion": 1,
+      "position": [
+        2220,
+        250
+      ],
+      "credentials": {
+        "githubOAuth2Api": {
+          "id": "github-creds-id",
+          "name": "GitHub Connection"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Check Every 5 Mins": {
+      "main": [
+        [
+          {
+            "node": "Read Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Read Google Sheets": {
+      "main": [
+        [
+          {
+            "node": "Has Pending Row?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Has Pending Row?": {
+      "main": [
+        [
+          {
+            "node": "Shopee Deep Link Generator",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Fetch All Rows (For Cache)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Shopee Deep Link Generator": {
+      "main": [
+        [
+          {
+            "node": "Image Info Generator",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Image Info Generator": {
+      "main": [
+        [
+          {
+            "node": "Download Compressed Image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download Compressed Image": {
+      "main": [
+        [
+          {
+            "node": "Push Image to GitHub",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Push Image to GitHub": {
+      "main": [
+        [
+          {
+            "node": "Update Sheets to DONE",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Sheets to DONE": {
+      "main": [
+        [
+          {
+            "node": "Fetch All Rows (For Cache)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch All Rows (For Cache)": {
+      "main": [
+        [
+          {
+            "node": "Cache Builder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Cache Builder": {
+      "main": [
+        [
+          {
+            "node": "Push data.json to GitHub",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "meta": {
+    "templateCredsSetupCompleted": true
+  }
+}

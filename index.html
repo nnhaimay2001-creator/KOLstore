@@ -78,18 +78,14 @@
             -ms-overflow-style: none;
             scrollbar-width: none;
         }
-        /* Glassmorphism utility */
+        /* Glassmorphism utility - Tối ưu hóa bỏ backdrop-filter để tránh lỗi mảng xám của Chrome Windows */
         .glass-panel {
-            background: rgba(17, 25, 40, 0.75);
-            backdrop-filter: blur(16px) saturate(180%);
-            -webkit-backdrop-filter: blur(16px) saturate(180%);
+            background: rgba(13, 19, 32, 0.96);
             border: 1px solid rgba(255, 255, 255, 0.08);
         }
         .glass-card {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.06);
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .glass-card:active {

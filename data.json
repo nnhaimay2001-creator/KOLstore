@@ -1,63 +1,18 @@
-{
+={
   "config": {
-    "avatar": "https://api.dicebear.com/7.x/adventurer/svg?seed=Lisa",
-    "name": "@khanhvy.official",
-    "bio": "✨ Welcome to my shop! Góc chia sẻ các sản phẩm chính hãng mình đã trực tiếp trải nghiệm và review trên TikTok. Săn deal hời mỗi ngày cùng mình nhé! 👇",
-    "shopee_mall": "https://shopee.vn/m/shopeemall"
+    "avatar": "https://drive.google.com/file/d/1yjMQiNPPcnjaDT8PONPyLTkciM9j-e5p/view?usp=drive_link",
+    "name": "@maynhonhiuchien",
+    "bio": "Tất tần tật đồ ck dùng ở đâyy!!",
+    "shopee_mall": "@maynhonhiuchien"
   },
   "products": [
     {
-      "ID": 1,
-      "Category": "Sắc Đẹp",
-      "Title": "Son Kem Lì Black Rouge Double Layer Over Velvet siêu mịn môi hot trend",
-      "Original_Link": "https://shopee.vn/Son-Kem-L%C3%AC-Black-Rouge-Double-Layer-Over-Velvet-i.123456.789012",
-      "Deep_Link": "shopeevn://product/123456/789012",
-      "Image_URL": "https://images.unsplash.com/photo-1586495777744-4413f21062fa?auto=format&fit=crop&q=80&w=400",
-      "Status": "DONE"
-    },
-    {
       "ID": 2,
-      "Category": "Sắc Đẹp",
-      "Title": "Nước Tẩy Trang Bí Đao Cocoon 500ml làm sạch sâu và giảm mụn hiệu quả",
-      "Original_Link": "https://shopee.vn/N%C6%B0%E1%BB%9Bc-T%E1%BA%A9y-Trang-B%C3%AD-%C4%90ao-Cocoon-500ml-i.234567.890123",
-      "Deep_Link": "shopeevn://product/234567/890123",
-      "Image_URL": "https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&q=80&w=400",
-      "Status": "DONE"
-    },
-    {
-      "ID": 3,
-      "Category": "Gia Dụng",
-      "Title": "Máy Xay Sinh Tố Mini Cầm Tay Đa Năng 6 Lưỡi Dao Sạc Pin Tiện Lợi",
-      "Original_Link": "https://shopee.vn/M%C3%A1y-Xay-Sinh-T%E1%BB%91-Mini-C%E1%BA%A7m-Tay-i.345678.901234",
-      "Deep_Link": "shopeevn://product/345678/901234",
-      "Image_URL": "https://images.unsplash.com/photo-1578643463396-0997cb5328c1?auto=format&fit=crop&q=80&w=400",
-      "Status": "DONE"
-    },
-    {
-      "ID": 4,
-      "Category": "Gia Dụng",
-      "Title": "Nồi Chiên Không Dầu Sunhouse 6L Dung Tích Lớn Tiết Kiệm Điện Năng",
-      "Original_Link": "https://shopee.vn/N%E1%BB%93-Chi%C3%AAn-Kh%C3%B4ng-D%E1%BA%A7u-Sunhouse-i.456789.012345",
-      "Deep_Link": "shopeevn://product/456789/012345",
-      "Image_URL": "https://images.unsplash.com/photo-1621972750749-0fbb1abb7736?auto=format&fit=crop&q=80&w=400",
-      "Status": "DONE"
-    },
-    {
-      "ID": 5,
-      "Category": "Thú Cưng",
-      "Title": "Pate Cho Mèo Cưng Khỏe Mạnh Hộp 80g Nhiều Vị Thơm Ngon Hấp Dẫn",
-      "Original_Link": "https://shopee.vn/Pate-Cho-M%C3%A8o-C%C6%B0ng-i.567890.123456",
-      "Deep_Link": "shopeevn://product/567890/123456",
-      "Image_URL": "https://images.unsplash.com/photo-1583511655857-d19b40a7a54e?auto=format&fit=crop&q=80&w=400",
-      "Status": "DONE"
-    },
-    {
-      "ID": 6,
-      "Category": "Sản phẩm khác",
-      "Title": "Bình Nước Giữ Nhiệt Inox 304 Cao Cấp 1000ml Có Quai Xách Thể Thao",
-      "Original_Link": "https://shopee.vn/B%C3%ACnh-N%C6%B0%E1%BB%9Bc-Gi%E1%BB%AF-Nhi%E1%BB%87t-Inox-i.678901.234567",
-      "Deep_Link": "shopeevn://product/678901/234567",
-      "Image_URL": "https://images.unsplash.com/photo-1602143407151-7111542de6e8?auto=format&fit=crop&q=80&w=400",
+      "Category": "Nhà Cửa & Đời sống",
+      "Title": "Combo 6 Túi Viên Giặt Xả MaxKleen",
+      "Original_Link": "https://s.shopee.vn/1LcqeI6OqW",
+      "Deep_Link": "shopeevn://",
+      "Image_URL": "images/product_2.webp",
       "Status": "DONE"
     }
   ]

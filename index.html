@@ -115,10 +115,6 @@
 </head>
 <body class="text-gray-100 min-h-screen relative overflow-x-hidden font-sans selection:bg-shopee-orange selection:text-white pb-10">
 
-    <!-- Blurry Ambient Background Blobs -->
-    <div class="absolute top-[-10%] left-[-20%] w-[80vw] h-[80vw] rounded-full bg-pink-500/10 blur-[120px] pointer-events-none"></div>
-    <div class="absolute top-[20%] right-[-20%] w-[80vw] h-[80vw] rounded-full bg-cyan-500/10 blur-[120px] pointer-events-none"></div>
-    <div class="absolute bottom-[-10%] left-[-20%] w-[80vw] h-[80vw] rounded-full bg-orange-500/5 blur-[120px] pointer-events-none"></div>
 
     <!-- Container chính (Được căn giữa trên desktop, full width trên mobile) -->
     <main class="w-full max-w-md mx-auto px-4 pt-6 relative z-10">
@@ -294,7 +290,7 @@
             const toast = document.getElementById('toast');
             const toastMessage = document.getElementById('toast-message');
 
-            // 1. Fetch dữ liệu từ file data.json tĩnh
+            // 1. Fetch dữ liệu từ file data.json tĩnh với Cache Buster để tránh CDN Cache
             fetch('data.json?t=' + new Date().getTime())
                 .then(response => {
                     if (!response.ok) throw new Error('Không thể tải file cấu hình dữ liệu!');
@@ -396,7 +392,7 @@
                              style="animation-delay: ${index * 0.05}s;">
                             
                             <!-- Area link bọc toàn bộ card cho trải nghiệm bấm tốt nhất -->
-                            <a href="${finalLink}" target="_blank" rel="noopener noreferrer" class="flex flex-col h-full flex-1" onclick="showRedirectionToast('${product.Title.replace(/'/g, "\\'")}')">
+                            <a href="${product.Original_Link}" target="_blank" rel="noopener noreferrer" class="flex flex-col h-full flex-1" onclick="openAffiliateLink(event, '${product.Deep_Link}', '${product.Original_Link}', '${product.Title.replace(/'/g, "\\'")}')">
                                 
                                 <!-- Ảnh sản phẩm tỉ lệ 1:1, Lazy loading -->
                                 <div class="aspect-square w-full overflow-hidden bg-gray-900 relative">
@@ -439,20 +435,35 @@
                 renderProducts();
             });
 
-            // 5. Hiển thị Toast thông báo mở Shopee App mượt mà
-            window.showRedirectionToast = function(productTitle) {
-                // Thiết lập câu thông báo cuốn hút
-                toastMessage.innerText = `Đang mở Shopee App săn deal: ${productTitle.length > 25 ? productTitle.substring(0, 25) + '...' : productTitle}`;
+            // 5. Hiển thị Toast & Mở link Affiliate thông minh tự động chuyển hướng theo thiết bị
+            window.openAffiliateLink = function(event, deepLink, originalLink, productTitle) {
+                event.preventDefault();
+
+                // Hiển thị câu thông báo cuốn hút
+                toastMessage.innerText = `Đang mở Shopee săn deal: ${productTitle.length > 25 ? productTitle.substring(0, 25) + '...' : productTitle}`;
                 
-                // Hiển thị toast
+                // Hiển thị toast mượt mà
                 toast.classList.remove('translate-y-24', 'opacity-0');
                 toast.classList.add('translate-y-0', 'opacity-100');
 
-                // Tự động ẩn đi sau 2.5 giây
+                // Tự động ẩn toast sau 2.5 giây
                 setTimeout(() => {
                     toast.classList.remove('translate-y-0', 'opacity-100');
                     toast.classList.add('translate-y-24', 'opacity-0');
                 }, 2500);
+
+                // KIỂM TRA THIẾT BỊ:
+                // Nếu là điện thoại di động (Android/iOS) và có Deep Link hợp lệ, mở Deep Link (App Shopee)
+                // Nếu là máy tính (Desktop) hoặc không có Deep Link, mở Original Link (Trình duyệt Web)
+                const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+                const hasValidDeepLink = deepLink && deepLink.startsWith('shopeevn://') && deepLink.length > 12;
+                
+                const finalLink = (isMobile && hasValidDeepLink) ? deepLink : originalLink;
+
+                // Điều hướng sang tab mới sau một khoảng trễ cực nhỏ 350ms để người dùng kịp nhận diện Toast thông báo cao cấp
+                setTimeout(() => {
+                    window.open(finalLink, '_blank');
+                }, 350);
             };
 
             // Trợ giúp hoạt cảnh dịch ngang của icon mũi tên

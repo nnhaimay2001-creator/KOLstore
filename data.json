@@ -1,18 +1,36 @@
 {
   "config": {
     "avatar": "https://lh3.googleusercontent.com/d/1yjMQiNPPcnjaDT8PONPyLTkciM9j-e5p",
-    "name": "https://collshp.com/mayyamyy418?view=storefront",
+    "name": "@maynhonhiuchien",
     "bio": "Tất tần tật đồ ck dùng ở đâyy!!",
     "shopee_mall": "https://collshp.com/mayyamyy418?view=storefront"
   },
   "products": [
     {
-      "ID": 4,
-      "Category": "Nhà Cửa & Đời sống",
-      "Title": "Combo 6 Túi Viên Giặt Xả MaxKleen",
-      "Original_Link": "https://s.shopee.vn/1LcqeI6OqW",
+      "ID": 9,
+      "Category": "Sắc Đẹp",
+      "Title": "Nước tẩy trang cho da nhạy cảm La Roche-Posay Micellar Water Sensitive Skin 400ml",
+      "Original_Link": "https://s.shopee.vn/6pxnKfXgdW",
       "Deep_Link": "shopeevn://",
-      "Image_URL": "images/product_4.webp",
+      "Image_URL": "images/product_9.webp",
+      "Status": "DONE"
+    },
+    {
+      "ID": 8,
+      "Category": "Sắc Đẹp",
+      "Title": "Nước tẩy trang mắt và môi Maybelline New York Eye & Lip Makeup Remover 150ml",
+      "Original_Link": "https://s.shopee.vn/LkJadMi5d",
+      "Deep_Link": "shopeevn://",
+      "Image_URL": "images/product_8.webp",
+      "Status": "DONE"
+    },
+    {
+      "ID": 7,
+      "Category": "Sắc Đẹp",
+      "Title": "Nước tẩy trang 3-in-1 L'Oreal Paris Micellar Water 400ml",
+      "Original_Link": "https://s.shopee.vn/2qReZ6Y5lb",
+      "Deep_Link": "shopeevn://",
+      "Image_URL": "images/product_7.webp",
       "Status": "DONE"
     },
     {
@@ -22,6 +40,15 @@
       "Original_Link": "https://s.shopee.vn/1gFhA7ZkkV",
       "Deep_Link": "shopeevn://",
       "Image_URL": "images/product_3.webp",
+      "Status": "DONE"
+    },
+    {
+      "ID": 2,
+      "Category": "Nhà Cửa & Đời sống",
+      "Title": "Combo 6 Túi Viên Giặt Xả MaxKleen",
+      "Original_Link": "https://s.shopee.vn/1LcqeI6OqW",
+      "Deep_Link": "shopeevn://",
+      "Image_URL": "images/product_4.webp",
       "Status": "DONE"
     }
   ]

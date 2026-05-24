@@ -1,18 +1,27 @@
 {
   "config": {
-    "avatar": "https://drive.google.com/file/d/1yjMQiNPPcnjaDT8PONPyLTkciM9j-e5p/view?usp=drive_link",
-    "name": "@maynhonhiuchien",
+    "avatar": "https://lh3.googleusercontent.com/d/1yjMQiNPPcnjaDT8PONPyLTkciM9j-e5p",
+    "name": "https://collshp.com/mayyamyy418?view=storefront",
     "bio": "Tất tần tật đồ ck dùng ở đâyy!!",
-    "shopee_mall": "@maynhonhiuchien"
+    "shopee_mall": "https://collshp.com/mayyamyy418?view=storefront"
   },
   "products": [
     {
-      "ID": 2,
+      "ID": 4,
       "Category": "Nhà Cửa & Đời sống",
       "Title": "Combo 6 Túi Viên Giặt Xả MaxKleen",
       "Original_Link": "https://s.shopee.vn/1LcqeI6OqW",
       "Deep_Link": "shopeevn://",
-      "Image_URL": "images/product_2.webp",
+      "Image_URL": "images/product_4.webp",
+      "Status": "DONE"
+    },
+    {
+      "ID": 3,
+      "Category": "Sắc Đẹp",
+      "Title": "Bông Tẩy Trang Hotosu Cao Cấp 150 miếng",
+      "Original_Link": "https://s.shopee.vn/1gFhA7ZkkV",
+      "Deep_Link": "shopeevn://",
+      "Image_URL": "images/product_3.webp",
       "Status": "DONE"
     }
   ]
